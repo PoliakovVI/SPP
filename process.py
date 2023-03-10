@@ -142,6 +142,17 @@ def LnProfStage(attribute_name="Close"):
         return dataframe_list
     return _lnprof_stage
 
+def BinarizeStage(threshold=0., attribute_name="Close_LnProf"):
+    def _binarize_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            binarized = []
+            for j in range(0, len(dataframe)):
+                curr = dataframe[attribute_name].to_list()[j]
+                binarized.append(1 if curr >= threshold else 0)
+            dataframe_list[i][attribute_name+"_Bin"] = binarized
+        return dataframe_list
+    return _binarize_stage
+
 def ExpProfStage(prev_price_attribute_name="Close", attribute_name="Close_LnProf"):
     def _expprof_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
@@ -249,3 +260,38 @@ class DefaultPipeline:
 
     def get_test_price(self, y_test_ln_pred):
         return self._get_price(y_test_ln_pred, 1)
+
+class BinarizedPipeline(DefaultPipeline):
+    def __init__(self, ticker, period="1y", window_size=15):
+        super().__init__(ticker, period, window_size)
+        
+
+    def get_data(self):
+        """
+        Returns (X_train, y_train, X_test, y_test)
+        """
+        self.prev_price_keeper = []
+        self.true_price_keeper = []
+
+        preprocessor = DataPrepare()
+        preprocessor.init_yahoo(self.tickers, start=None, end=None, period=self.period,
+                        stages=[
+            CutStage(["Close"]),
+            RSIColStage("Close"),
+            LnProfStage("Close"),
+            WindowStage(self.window_size),
+            TargetStage(f"Close_LnProf_{self.window_size-1}"),
+
+            BinarizeStage(0., "Target"),
+            DropStage(["Target"]),
+            TargetStage("Target_Bin"),
+
+            DropStage([f"RSI_{self.window_size-1}"]),
+            DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
+            TrainTestStage(),
+            PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
+            PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ])
+        preprocessor.download()
+        return preprocessor.prepare()
