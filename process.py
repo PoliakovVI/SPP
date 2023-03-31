@@ -263,7 +263,7 @@ class DefaultPipeline:
 
 class BinarizedPipeline(DefaultPipeline):
     def __init__(self, ticker, period="1y", window_size=15):
-        super().__init__(ticker, period, window_size)
+        super(BinarizedPipeline, self).__init__(ticker, period, window_size)
         
 
     def get_data(self):
