@@ -209,12 +209,19 @@ def TrendSubColStage(attribute_name = "Close"):
     return _trendsubcol_stage
 
 class DefaultPipeline:
+    """
+    period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+    """
     def __init__(self, ticker, period="1y", window_size=15):
         self.tickers = [ticker]
         self.period = period
         self.window_size = window_size
         self.prev_price_keeper = []
         self.true_price_keeper = []
+
+    def _stages(self):
+        stages=[]
+        return stages
     
     def get_data(self):
         """
@@ -225,19 +232,7 @@ class DefaultPipeline:
 
         preprocessor = DataPrepare()
         preprocessor.init_yahoo(self.tickers, start=None, end=None, period=self.period,
-                        stages=[
-            CutStage(["Close"]),
-            RSIColStage("Close"),
-            LnProfStage("Close"),
-            WindowStage(self.window_size),
-            TargetStage(f"Close_LnProf_{self.window_size-1}"),
-            DropStage([f"RSI_{self.window_size-1}"]),
-            DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
-            TrainTestStage(),
-            PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
-            PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
-            TargetsSeparateStage(),
-        ])
+                        stages=self._stages())
         preprocessor.download()
         return preprocessor.prepare()
 
@@ -256,26 +251,45 @@ class DefaultPipeline:
         return df
 
     def get_train_price(self, y_train_ln_pred):
+        """
+        ln profit to stock price for train data
+        """
         return self._get_price(y_train_ln_pred, 0)
 
     def get_test_price(self, y_test_ln_pred):
+        """
+        ln profit to stock price for test data
+        """
         return self._get_price(y_test_ln_pred, 1)
 
-class BinarizedPipeline(DefaultPipeline):
-    def __init__(self, ticker, period="1y", window_size=15):
-        super(BinarizedPipeline, self).__init__(ticker, period, window_size)
-        
+class BaselineBinPipeline(DefaultPipeline): 
+    def _stages(self):
+        stages=[
+            CutStage(["Close"]),
+            # RSIColStage("Close"),
+            LnProfStage("Close"),
+            WindowStage(self.window_size),
+            TargetStage(f"Close_LnProf_{self.window_size-1}"),
 
-    def get_data(self):
+            BinarizeStage(0., "Target"),
+            DropStage(["Target"]),
+            TargetStage("Target_Bin"),
+
+            # DropStage([f"RSI_{self.window_size-1}"]),
+            DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
+            TrainTestStage(),
+            PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
+            PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ]
+        return stages
+
+class BinarizedPipeline(DefaultPipeline):        
+    def _stages(self):
         """
         Returns (X_train, y_train, X_test, y_test)
         """
-        self.prev_price_keeper = []
-        self.true_price_keeper = []
-
-        preprocessor = DataPrepare()
-        preprocessor.init_yahoo(self.tickers, start=None, end=None, period=self.period,
-                        stages=[
+        stages=[
             CutStage(["Close"]),
             RSIColStage("Close"),
             LnProfStage("Close"),
@@ -292,6 +306,5 @@ class BinarizedPipeline(DefaultPipeline):
             PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
             PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
             TargetsSeparateStage(),
-        ])
-        preprocessor.download()
-        return preprocessor.prepare()
+        ]
+        return stages
