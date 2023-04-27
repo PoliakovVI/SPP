@@ -36,7 +36,7 @@ class DataPrepare:
     def __init__(self):
         pass
         
-    def init_yahoo(self, tickers, start="2019-01-01", end="2019-12-31", 
+    def init_yahoo(self, tickers, start=None, end=None, 
                  period=None,
                  interval='1d', stages = []):
         self.tickers = tickers
@@ -212,10 +212,20 @@ class DefaultPipeline:
     """
     period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
     """
-    def __init__(self, ticker, period="1y", window_size=15):
+    def __init__(self, ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2):
+        """
+        ticker      - stock ticker
+        start, end  - iso strings of date, use this OR period API
+        period      - 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API
+        window_size - window size
+        test_coef   - amount of data represent test
+        """
         self.tickers = [ticker]
+        self.start = start
+        self.end = end
         self.period = period
         self.window_size = window_size
+        self.test_coef = test_coef
         self.prev_price_keeper = []
         self.true_price_keeper = []
 
@@ -231,7 +241,7 @@ class DefaultPipeline:
         self.true_price_keeper = []
 
         preprocessor = DataPrepare()
-        preprocessor.init_yahoo(self.tickers, start=None, end=None, period=self.period,
+        preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
                         stages=self._stages())
         preprocessor.download()
         return preprocessor.prepare()
@@ -259,36 +269,40 @@ class DefaultPipeline:
     def get_test_price(self, y_test_ln_pred):
         """
         ln profit to stock price for test data
+
+        Return: pd.DataFrame
+                Prediction: Predicted price
+                Price_True: Real price
         """
         return self._get_price(y_test_ln_pred, 1)
 
 class BaselineBinPipeline(DefaultPipeline): 
     def _stages(self):
         stages=[
+            # Use close price in ln form
             CutStage(["Close"]),
             # RSIColStage("Close"),
             LnProfStage("Close"),
             WindowStage(self.window_size),
             TargetStage(f"Close_LnProf_{self.window_size-1}"),
 
+            # Reduce regression task to classification
             BinarizeStage(0., "Target"),
             DropStage(["Target"]),
             TargetStage("Target_Bin"),
 
+            # Split to train/test and X/y
             # DropStage([f"RSI_{self.window_size-1}"]),
             DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
-            TrainTestStage(),
+            TrainTestStage(test=self.test_coef),
             PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
             PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
             TargetsSeparateStage(),
         ]
         return stages
 
-class BinarizedPipeline(DefaultPipeline):        
+class RsiBinPipeline(DefaultPipeline):        
     def _stages(self):
-        """
-        Returns (X_train, y_train, X_test, y_test)
-        """
         stages=[
             CutStage(["Close"]),
             RSIColStage("Close"),
