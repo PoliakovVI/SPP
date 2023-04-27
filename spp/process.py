@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import yfinance as yf
 import math
+from collections.abc import Iterable
+
+import util
 
 # download data from yahoo.finance
 def _download_data(yahoo_corp_name="TSLA", output_csv_name="Tesla", download_to_path="", 
@@ -69,8 +72,12 @@ class DataPrepare:
         return self.dataframes
 
 def CutStage(attribute_names: list):
+    """
+    Stage
+    foreach take out 'attribute_names' columns only
+    """
     if type(attribute_names) != list:
-        raise Exception(f"Error: CutStage input {type(attribute_names)} not a {list}")
+        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     def _cut_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             dataframe_list[i] = dataframe[attribute_names]
@@ -78,6 +85,10 @@ def CutStage(attribute_names: list):
     return _cut_stage
 
 def WindowStage(window_size=15):
+    """
+    Stage
+    foreach made data windowed
+    """
     def _window_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             
@@ -96,6 +107,10 @@ def WindowStage(window_size=15):
     return _window_stage
 
 def TrainTestStage(test=0.2):
+    """
+    Stage
+    foreach append train & test datasets instead
+    """
     def _traintest_stage(dataframe_list: list):
         new_dataframe_list = []
         for i, dataframe in enumerate(dataframe_list):
@@ -106,6 +121,10 @@ def TrainTestStage(test=0.2):
     return _traintest_stage
 
 def TargetsSeparateStage(target_names=["Target"]):
+    """
+    Stage
+    foreach take out 'target_names' and append it as another dataset
+    """
     def _targetsseparate_stage(dataframe_list: list):
         new_dataframe_list = []
         for i, dataframe in enumerate(dataframe_list):
@@ -116,19 +135,45 @@ def TargetsSeparateStage(target_names=["Target"]):
     return _targetsseparate_stage
 
 def TargetStage(target, target_name="Target"):
+    """
+    Stage
+    foreach find 'target' column and mark it as 'target_name'
+    """
     def _target_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             columns = dataframe.columns.to_list()
             if target not in columns:
-                raise Exception(f"Error: {target} not in {columns}")
+                raise SPPException(f"{target} not in {columns}")
             columns.remove(target)
             dataframe_list[i] =  dataframe_list[i][columns + [target]].rename(columns={target: target_name})
         return dataframe_list
     return _target_stage
 
+def ConcatStage(step: int):
+    """
+    Stage
+    foreach concat dataframes with 'step'
+    """
+    def _concat_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for start_id in range(min(step, len(dataframe_list))):
+            new_dataframe = None
+            for current_id in range(start_id, len(dataframe_list), step):
+                if new_dataframe is None:
+                    new_dataframe = dataframe_list[current_id]
+                else:
+                    new_dataframe = pd.concat([new_dataframe, dataframe_list[current_id]])
+            new_dataframe_list.append(new_dataframe)
+        # for i, dataframe in enumerate(dataframe_list):
+        #     dataframe_list[i] = dataframe[attribute_names]
+        return new_dataframe_list
+    return _concat_stage
+
 def LnProfStage(attribute_name="Close"):
     """
-    reduces dataframe length by 1
+    Stage
+    foreach compute ln profit from 'attribute_name' column
+    #reduces dataframe length by 1
     """
     def _lnprof_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
@@ -167,7 +212,7 @@ def ExpProfStage(prev_price_attribute_name="Close", attribute_name="Close_LnProf
 
 def DropStage(attribute_names: list):
     if type(attribute_names) != list:
-        raise Exception(f"Error: DropStage input {type(attribute_names)} not a {list}")
+        raise SPPException(f"DropStage input {type(attribute_names)} not a {list}")
     def _drop_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
@@ -177,9 +222,9 @@ def DropStage(attribute_names: list):
 
 def PopStage(attribute_names: list, keeper: list):
     if type(attribute_names) != list:
-        raise Exception(f"Error: CutStage input {type(attribute_names)} not a {list}")
+        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     if type(attribute_names) != list:
-        raise Exception(f"Error: CutStage input {type(attribute_names)} not a {list}")
+        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     def _pop_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
@@ -220,7 +265,16 @@ class DefaultPipeline:
         window_size - window size
         test_coef   - amount of data represent test
         """
-        self.tickers = [ticker]
+
+        self.concat_need = False
+        if isinstance(ticker, str):
+            self.tickers = [ticker]
+        elif isinstance(ticker, Iterable):
+            self.tickers = ticker
+            self.concat_need = True
+        else:
+            raise SPPException(f"unknown ticker type {type(ticker)}")
+
         self.start = start
         self.end = end
         self.period = period
@@ -240,11 +294,38 @@ class DefaultPipeline:
         self.prev_price_keeper = []
         self.true_price_keeper = []
 
+        stages=self._stages()
+
+        # if multiple tickers were proposed
+        if self.concat_need:
+            stages.append(ConcatStage(4))
+
         preprocessor = DataPrepare()
         preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
-                        stages=self._stages())
+                        stages=stages)
         preprocessor.download()
-        return preprocessor.prepare()
+        to_ret = preprocessor.prepare()
+
+        # fix buffers if multiple tickers were proposed
+        train_keeper = None
+        test_keeper = None
+        for i, keeper in enumerate(self.prev_price_keeper):
+            if i % 2 == 0:
+                train_keeper = pd.concat([train_keeper, keeper])
+            else:
+                test_keeper = pd.concat([test_keeper, keeper])
+        self.prev_price_keeper = [train_keeper, test_keeper]
+
+        train_keeper = None
+        test_keeper = None
+        for i, keeper in enumerate(self.true_price_keeper):
+            if i % 2 == 0:
+                train_keeper = pd.concat([train_keeper, keeper])
+            else:
+                test_keeper = pd.concat([test_keeper, keeper])
+        self.true_price_keeper = [train_keeper, test_keeper]
+
+        return to_ret
 
     def _get_price(self, y_ln_pred, train_test_id):
         pred_df = pd.DataFrame(np.array(y_ln_pred), columns=["Prediction"])
