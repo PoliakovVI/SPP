@@ -6,7 +6,7 @@ import yfinance as yf
 import math
 from collections.abc import Iterable
 
-import util
+from spp import util
 
 # download data from yahoo.finance
 def _download_data(yahoo_corp_name="TSLA", output_csv_name="Tesla", download_to_path="", 
@@ -77,7 +77,7 @@ def CutStage(attribute_names: list):
     foreach take out 'attribute_names' columns only
     """
     if type(attribute_names) != list:
-        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
+        raise util.SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     def _cut_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             dataframe_list[i] = dataframe[attribute_names]
@@ -120,6 +120,22 @@ def TrainTestStage(test=0.2):
         return new_dataframe_list
     return _traintest_stage
 
+def TrainValidTestStage(valid=0.2, test=0.2):
+    """
+    Stage
+    foreach append train & valid & test datasets instead
+    """
+    def _trainvalidtest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test - valid) * len(dataframe))
+            valid_count = round(valid * len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:train_count+valid_count])
+            new_dataframe_list.append(dataframe[train_count+valid_count:])
+        return new_dataframe_list
+    return _trainvalidtest_stage
+
 def TargetsSeparateStage(target_names=["Target"]):
     """
     Stage
@@ -143,7 +159,7 @@ def TargetStage(target, target_name="Target"):
         for i, dataframe in enumerate(dataframe_list):
             columns = dataframe.columns.to_list()
             if target not in columns:
-                raise SPPException(f"{target} not in {columns}")
+                raise util.SPPException(f"{target} not in {columns}")
             columns.remove(target)
             dataframe_list[i] =  dataframe_list[i][columns + [target]].rename(columns={target: target_name})
         return dataframe_list
@@ -163,9 +179,7 @@ def ConcatStage(step: int):
                     new_dataframe = dataframe_list[current_id]
                 else:
                     new_dataframe = pd.concat([new_dataframe, dataframe_list[current_id]])
-            new_dataframe_list.append(new_dataframe)
-        # for i, dataframe in enumerate(dataframe_list):
-        #     dataframe_list[i] = dataframe[attribute_names]
+            new_dataframe_list.append(new_dataframe.reset_index(drop=True))
         return new_dataframe_list
     return _concat_stage
 
@@ -177,15 +191,27 @@ def LnProfStage(attribute_name="Close"):
     """
     def _lnprof_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
-            lnprofs = [None]
+            lnprofs = [0]
             for j in range(1, len(dataframe)):
                 price_curr = dataframe[attribute_name].to_list()[j]
                 price_prev = dataframe[attribute_name].to_list()[j-1]
                 lnprofs.append(math.log(price_curr / price_prev))
             dataframe_list[i][attribute_name+"_LnProf"] = lnprofs
-            dataframe_list[i] = dataframe_list[i][1:]
+            # dataframe_list[i] = dataframe_list[i][1:]
         return dataframe_list
     return _lnprof_stage
+
+def DivStage(divisible_attr_name, divisor_attr_name, attr_name):
+    """
+    Stage
+    create 'attr_name' = 'divisible_attr_name' / 'divisor_attr_name'
+    #first value is always zero
+    """
+    def _div_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i][attr_name] = dataframe_list[i][divisible_attr_name] / dataframe_list[i][divisor_attr_name]
+        return dataframe_list
+    return _div_stage
 
 def BinarizeStage(threshold=0., attribute_name="Close_LnProf"):
     def _binarize_stage(dataframe_list: list):
@@ -212,7 +238,7 @@ def ExpProfStage(prev_price_attribute_name="Close", attribute_name="Close_LnProf
 
 def DropStage(attribute_names: list):
     if type(attribute_names) != list:
-        raise SPPException(f"DropStage input {type(attribute_names)} not a {list}")
+        raise util.SPPException(f"DropStage input {type(attribute_names)} not a {list}")
     def _drop_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
@@ -222,9 +248,9 @@ def DropStage(attribute_names: list):
 
 def PopStage(attribute_names: list, keeper: list):
     if type(attribute_names) != list:
-        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
+        raise util.SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     if type(attribute_names) != list:
-        raise SPPException(f"CutStage input {type(attribute_names)} not a {list}")
+        raise util.SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     def _pop_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
@@ -273,7 +299,7 @@ class DefaultPipeline:
             self.tickers = ticker
             self.concat_need = True
         else:
-            raise SPPException(f"unknown ticker type {type(ticker)}")
+            raise util.SPPException(f"unknown ticker type {type(ticker)}")
 
         self.start = start
         self.end = end
@@ -282,6 +308,17 @@ class DefaultPipeline:
         self.test_coef = test_coef
         self.prev_price_keeper = []
         self.true_price_keeper = []
+
+    def __str__(self):
+        string = ""
+        pref = ""
+        for stage in self._stages():
+            string += pref + stage.__name__
+            pref = ", "
+        return f"({string})"
+
+    def __repr__(self):
+        return f"{type(self).__name__}{self.__str__()}"
 
     def _stages(self):
         stages=[]
@@ -296,34 +333,33 @@ class DefaultPipeline:
 
         stages=self._stages()
 
-        # if multiple tickers were proposed
-        if self.concat_need:
-            stages.append(ConcatStage(4))
+        # # if multiple tickers were proposed
+        # if self.concat_need:
+        #     stages.append(ConcatStage(4))
 
         preprocessor = DataPrepare()
         preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
                         stages=stages)
         preprocessor.download()
         to_ret = preprocessor.prepare()
+        # # fix buffers if multiple tickers were proposed
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.prev_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.prev_price_keeper = [train_keeper, test_keeper]
 
-        # fix buffers if multiple tickers were proposed
-        train_keeper = None
-        test_keeper = None
-        for i, keeper in enumerate(self.prev_price_keeper):
-            if i % 2 == 0:
-                train_keeper = pd.concat([train_keeper, keeper])
-            else:
-                test_keeper = pd.concat([test_keeper, keeper])
-        self.prev_price_keeper = [train_keeper, test_keeper]
-
-        train_keeper = None
-        test_keeper = None
-        for i, keeper in enumerate(self.true_price_keeper):
-            if i % 2 == 0:
-                train_keeper = pd.concat([train_keeper, keeper])
-            else:
-                test_keeper = pd.concat([test_keeper, keeper])
-        self.true_price_keeper = [train_keeper, test_keeper]
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.true_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.true_price_keeper = [train_keeper, test_keeper]
 
         return to_ret
 
@@ -397,7 +433,7 @@ class RsiBinPipeline(DefaultPipeline):
 
             DropStage([f"RSI_{self.window_size-1}"]),
             DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
-            TrainTestStage(),
+            TrainTestStage(test=self.test_coef),
             PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
             PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
             TargetsSeparateStage(),

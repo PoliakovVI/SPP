@@ -1,3 +1,6 @@
+import os
+import sys
+
 class SPPException(Exception):
     def __init__(self, *args):
         if args:
@@ -7,7 +10,6 @@ class SPPException(Exception):
 
     def __str__(self):
         return f"[SPP ERROR]: {self.message}"
-
 
 def parse_period(period):
     """
@@ -29,3 +31,4 @@ def parse_period(period):
         raise SPPException(f"Period {period} has an unknown unit specificator")
 
     return ymd_list
+

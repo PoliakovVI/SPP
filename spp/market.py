@@ -8,8 +8,8 @@ from dateutil.relativedelta import relativedelta
 import yfinance as yf
 import calendar
 
-import util
-import process
+from spp import util
+from spp import process
 
 class TraderTest:
     def __init__(self, capital, price_predicted, price_true):
@@ -227,7 +227,7 @@ class BinYearTest:
         elif end_date is None:
             end_date = datetime.datetime.now().date().__str__()
         else:
-            raise SPPException(f"unknown end_month type {type(end_date)}")
+            raise util.SPPException(f"unknown end_month type {type(end_date)}")
 
         # the choosen month should not be in the dataset, so,
         # the begining motnth is the same one year ago
