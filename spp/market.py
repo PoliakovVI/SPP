@@ -12,7 +12,16 @@ from spp import util
 from spp import process
 
 class TraderTest:
+    """
+    Basic traider test based on predicted and real stock cost.
+    It chooses the best trading strategy and provides a result capital.
+    """
     def __init__(self, capital, price_predicted, price_true):
+        """
+        capital         - start capital for testing
+        bin_predicted   - model predictions [0 - demotion, 1 - elevation]
+        price_true      - real stock price during the period
+        """
         self.capital = capital
         self.stock_count = 0
         self.status_money = True
@@ -45,6 +54,10 @@ class TraderTest:
         return self.capital
 
 class BinTraderTest:
+    """
+    Basic traider test based on predicted trend and real stock cost.
+    It chooses the best trading strategy and provides a result capital.
+    """
     def __init__(self, capital, bin_predicted, price_true):
         """
         capital         - start capital for testing
@@ -85,12 +98,15 @@ class BinTraderTest:
         return self.capital
 
 class BinPortfolioTest:
+    """
+    Makes BinTraderTest foreach from 'tickers'. Result is averaged among all the 'tickers'.
+    """
     def __init__(self, tickers, pipeline_class, train_period="1y", test_period="1mo", end_date=None, 
                 window_size=15, start_capital=100000):
         """
         tickers         - Itarable of stock tickers
         pipeline_class  - data load pipeline from spp.process
-        #_period X[d, mo, y]; X - number of units, [] - unit specificator
+        *_period X[d, mo, y]; X - number of units, [] - unit specificator
                         E.g. 10d - 10 days period
         train_period    - for model training
         test_period     - for model testing
@@ -212,6 +228,10 @@ class BinPortfolioTest:
         return pd.DataFrame(data_list, columns=["Case", "TrainAcc", "TestAcc", "Income", "Potential"])
 
 class BinYearTest:
+    """
+    Makes BinPortfolioTest foreach month in the latest year. 
+    Provided results are avaraged among all the 'tickers'.
+    """
     def __init__(self, tickers, pipeline_class, train_period="1y", end_date=None, window_size=15):
         """
         tickers         - Itarable of stock tickers

@@ -18,30 +18,37 @@ def _download_data(yahoo_corp_name="TSLA", output_csv_name="Tesla", download_to_
     data.to_csv(download_to_path+output_csv_name+".csv")
 
 # calculate RSI
-def _rsi(df, periods = 14):
+def _rsi(df, attribute_name, period = 14):
     """
     Returns a pd.Series with the relative strength index.
     """
-    close_delta = df['Close'].copy().diff()
+    close_delta = df[attribute_name].copy().diff()
 
     # Make two series: one for lower closes and one for higher closes
     up = close_delta.clip(lower=0)
     down = -1 * close_delta.clip(upper=0)
     
-    ma_up = up.ewm(com = periods - 1, adjust=True).mean()
-    ma_down = down.ewm(com = periods - 1, adjust=True).mean()
+    ma_up = up.ewm(com = period - 1, adjust=True).mean()
+    ma_down = down.ewm(com = period - 1, adjust=True).mean()
     
     rsi = ma_up / ma_down
     rsi = 100 - (100/(1 + rsi))
     return rsi
 
 class DataPrepare:
+    """
+    Implements full pipeline of data downloading and preprocessing. Call order is
+    init_yahoo, download, prepare
+    """
     def __init__(self):
         pass
         
     def init_yahoo(self, tickers, start=None, end=None, 
                  period=None,
                  interval='1d', stages = []):
+        """
+        Initialize yahoo download properties
+        """
         self.tickers = tickers
         self.start = start
         self.end = end
@@ -52,29 +59,41 @@ class DataPrepare:
         self.stages = stages
 
     def init_datalist(self, data_list, stages = []):
+        """
+        Used for predownloaded data. data_list contains all the 
+        dowloaded dataframes and stages contains all the prepare
+        stages.
+        """
         self.dataframes = data_list
         self.stages = stages
 
     def download(self):
+        """
+        Download data
+        """
         for ticker in self.tickers:
             self.dataframes.append(yf.download(ticker, start=self.start, end=self.end, interval=self.interval, 
                                                period=self.period))
 
     def add_stage(self, stage):
         """
+        Append a single stage
         stage takes and returns a list of DataFrames
         """
         self.stages.append(stage)
 
     def prepare(self):
+        """
+        Preprocess and return all the dataframes
+        """
         for stage in self.stages:
             self.dataframes = stage(self.dataframes)
         return self.dataframes
 
 def CutStage(attribute_names: list):
     """
-    Stage
-    foreach take out 'attribute_names' columns only
+    Stage.
+    foreach dataframe take out 'attribute_names' columns only
     """
     if type(attribute_names) != list:
         raise util.SPPException(f"CutStage input {type(attribute_names)} not a {list}")
@@ -86,8 +105,8 @@ def CutStage(attribute_names: list):
 
 def WindowStage(window_size=15):
     """
-    Stage
-    foreach made data windowed
+    Stage.
+    foreach dataframe made data windowed
     """
     def _window_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
@@ -108,8 +127,8 @@ def WindowStage(window_size=15):
 
 def TrainTestStage(test=0.2):
     """
-    Stage
-    foreach append train & test datasets instead
+    Stage.
+    foreach dataframe append train & test datasets instead
     """
     def _traintest_stage(dataframe_list: list):
         new_dataframe_list = []
@@ -122,8 +141,8 @@ def TrainTestStage(test=0.2):
 
 def TrainValidTestStage(valid=0.2, test=0.2):
     """
-    Stage
-    foreach append train & valid & test datasets instead
+    Stage.
+    foreach dataframe append train & valid & test datasets instead
     """
     def _trainvalidtest_stage(dataframe_list: list):
         new_dataframe_list = []
@@ -138,8 +157,8 @@ def TrainValidTestStage(valid=0.2, test=0.2):
 
 def TargetsSeparateStage(target_names=["Target"]):
     """
-    Stage
-    foreach take out 'target_names' and append it as another dataset
+    Stage.
+    foreach dataframe take out 'target_names' and append it as another dataset
     """
     def _targetsseparate_stage(dataframe_list: list):
         new_dataframe_list = []
@@ -152,8 +171,8 @@ def TargetsSeparateStage(target_names=["Target"]):
 
 def TargetStage(target, target_name="Target"):
     """
-    Stage
-    foreach find 'target' column and mark it as 'target_name'
+    Stage.
+    foreach dataframe find 'target' column and mark it as 'target_name'
     """
     def _target_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
@@ -167,8 +186,8 @@ def TargetStage(target, target_name="Target"):
 
 def ConcatStage(step: int):
     """
-    Stage
-    foreach concat dataframes with 'step'
+    Stage.
+    foreach dataframe concat dataframes with 'step'
     """
     def _concat_stage(dataframe_list: list):
         new_dataframe_list = []
@@ -185,13 +204,13 @@ def ConcatStage(step: int):
 
 def LnProfStage(attribute_name="Close"):
     """
-    Stage
-    foreach compute ln profit from 'attribute_name' column
-    #reduces dataframe length by 1
+    Stage.
+    foreach dataframe compute ln profit from 'attribute_name' column
+    [First value is considered 1]
     """
     def _lnprof_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
-            lnprofs = [0]
+            lnprofs = [1]
             for j in range(1, len(dataframe)):
                 price_curr = dataframe[attribute_name].to_list()[j]
                 price_prev = dataframe[attribute_name].to_list()[j-1]
@@ -203,9 +222,9 @@ def LnProfStage(attribute_name="Close"):
 
 def DivStage(divisible_attr_name, divisor_attr_name, attr_name):
     """
-    Stage
-    create 'attr_name' = 'divisible_attr_name' / 'divisor_attr_name'
-    #first value is always zero
+    Stage.
+    foreach dataframe create 'attr_name' = 'divisible_attr_name' / 'divisor_attr_name'
+    [First value is considered 0]
     """
     def _div_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
@@ -214,6 +233,11 @@ def DivStage(divisible_attr_name, divisor_attr_name, attr_name):
     return _div_stage
 
 def BinarizeStage(threshold=0., attribute_name="Close_LnProf"):
+    """
+    Stage.
+    foreach dataframe value from 'attribute_name' column apply: 
+    1 if value > threshold else 0
+    """
     def _binarize_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             binarized = []
@@ -225,6 +249,12 @@ def BinarizeStage(threshold=0., attribute_name="Close_LnProf"):
     return _binarize_stage
 
 def ExpProfStage(prev_price_attribute_name="Close", attribute_name="Close_LnProf"):
+    """
+    Stage.
+    foreach dataframe computes real stock cost based on 'prev_price_attribute_name' 
+    from logarifmic profit in 'attribute_name'
+    ['prev_price_attribute_name' should contain data shifted by one 1 day back]
+    """
     def _expprof_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             expprofs = []
@@ -237,6 +267,10 @@ def ExpProfStage(prev_price_attribute_name="Close", attribute_name="Close_LnProf
     return _expprof_stage
 
 def DropStage(attribute_names: list):
+    """
+    Stage.
+    foreach dataframe drop all the 'attribute_names'
+    """
     if type(attribute_names) != list:
         raise util.SPPException(f"DropStage input {type(attribute_names)} not a {list}")
     def _drop_stage(dataframe_list: list):
@@ -247,6 +281,10 @@ def DropStage(attribute_names: list):
     return _drop_stage
 
 def PopStage(attribute_names: list, keeper: list):
+    """
+    Stage.
+    foreach dataframe drop all the 'attribute_names' and put them to 'keeper'
+    """
     if type(attribute_names) != list:
         raise util.SPPException(f"CutStage input {type(attribute_names)} not a {list}")
     if type(attribute_names) != list:
@@ -259,15 +297,23 @@ def PopStage(attribute_names: list, keeper: list):
         return dataframe_list
     return _pop_stage
 
-def RSIColStage(attribute_name = "Close"):
+def RSIColStage(attribute_name="Close", period=14):
+    """
+    Stage.
+    foreach dataframe compute RSI from 'attribute_name'
+    """
     def _rsicol_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
-            dataframe_list[i]["RSI"] = _rsi(dataframe)
-            dataframe_list[i] = dataframe_list[i][1:]
+            dataframe_list[i]["RSI"] = _rsi(dataframe, attribute_name, period)
+            # dataframe_list[i] = dataframe_list[i][1:]
         return dataframe_list
     return _rsicol_stage
 
 def TrendSubColStage(attribute_name = "Close"):
+    """
+    Stage.
+    foreach dataframe subs trend from 'attribute_name'
+    """
     def _trendsubcol_stage(dataframe_list: list):
         for i, dataframe in enumerate(dataframe_list):
             x = pd.DataFrame(np.arange(len(dataframe)), columns=["Idx"])
@@ -281,14 +327,15 @@ def TrendSubColStage(attribute_name = "Close"):
 
 class DefaultPipeline:
     """
-    period: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+    Parent for all the data process pipelines. One should override '_stages(self)->list' method to
+    add a new pipeline in the system. 
     """
     def __init__(self, ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2):
         """
-        ticker      - stock ticker
-        start, end  - iso strings of date, use this OR period API
-        period      - 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API
-        window_size - window size
+        ticker      - stock ticker;
+        start, end  - iso strings of date, use this OR period API;
+        period      - 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+        window_size - window size;
         test_coef   - amount of data represent test
         """
 
@@ -379,13 +426,13 @@ class DefaultPipeline:
 
     def get_train_price(self, y_train_ln_pred):
         """
-        ln profit to stock price for train data
+        Repair ln profit to stock price for train data
         """
         return self._get_price(y_train_ln_pred, 0)
 
     def get_test_price(self, y_test_ln_pred):
         """
-        ln profit to stock price for test data
+        Repair ln profit to stock price for test data
 
         Return: pd.DataFrame
                 Prediction: Predicted price
@@ -394,6 +441,9 @@ class DefaultPipeline:
         return self._get_price(y_test_ln_pred, 1)
 
 class BaselineBinPipeline(DefaultPipeline): 
+    """
+    Basic pipeline that contains close data only
+    """
     def _stages(self):
         stages=[
             # Use close price in ln form
@@ -418,7 +468,10 @@ class BaselineBinPipeline(DefaultPipeline):
         ]
         return stages
 
-class RsiBinPipeline(DefaultPipeline):        
+class RsiBinPipeline(DefaultPipeline):   
+    """
+    Basic pipeline extended with RSI
+    """     
     def _stages(self):
         stages=[
             CutStage(["Close"]),

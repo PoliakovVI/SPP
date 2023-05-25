@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>spp.process API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>spp.process</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import yfinance as yf
+import math
+from collections.abc import Iterable
+
+from spp import util
+
+# download data from yahoo.finance
+def _download_data(yahoo_corp_name=&#34;TSLA&#34;, output_csv_name=&#34;Tesla&#34;, download_to_path=&#34;&#34;, 
+                    start=&#34;2019-01-01&#34;, end=&#34;2019-12-31&#34;, interval=&#39;1d&#39;):
+    &#34;&#34;&#34;
+    interval: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
+    &#34;&#34;&#34;
+    data = yf.download(yahoo_corp_name, start=start, end=end, interval=interval)
+    data.to_csv(download_to_path+output_csv_name+&#34;.csv&#34;)
+
+# calculate RSI
+def _rsi(df, attribute_name, period = 14):
+    &#34;&#34;&#34;
+    Returns a pd.Series with the relative strength index.
+    &#34;&#34;&#34;
+    close_delta = df[attribute_name].copy().diff()
+
+    # Make two series: one for lower closes and one for higher closes
+    up = close_delta.clip(lower=0)
+    down = -1 * close_delta.clip(upper=0)
+    
+    ma_up = up.ewm(com = period - 1, adjust=True).mean()
+    ma_down = down.ewm(com = period - 1, adjust=True).mean()
+    
+    rsi = ma_up / ma_down
+    rsi = 100 - (100/(1 + rsi))
+    return rsi
+
+class DataPrepare:
+    &#34;&#34;&#34;
+    Implements full pipeline of data downloading and preprocessing. Call order is
+    init_yahoo, download, prepare
+    &#34;&#34;&#34;
+    def __init__(self):
+        pass
+        
+    def init_yahoo(self, tickers, start=None, end=None, 
+                 period=None,
+                 interval=&#39;1d&#39;, stages = []):
+        &#34;&#34;&#34;
+        Initialize yahoo download properties
+        &#34;&#34;&#34;
+        self.tickers = tickers
+        self.start = start
+        self.end = end
+        self.period = period
+        self.interval = interval
+
+        self.dataframes = []
+        self.stages = stages
+
+    def init_datalist(self, data_list, stages = []):
+        &#34;&#34;&#34;
+        Used for predownloaded data. data_list contains all the 
+        dowloaded dataframes and stages contains all the prepare
+        stages.
+        &#34;&#34;&#34;
+        self.dataframes = data_list
+        self.stages = stages
+
+    def download(self):
+        &#34;&#34;&#34;
+        Download data
+        &#34;&#34;&#34;
+        for ticker in self.tickers:
+            self.dataframes.append(yf.download(ticker, start=self.start, end=self.end, interval=self.interval, 
+                                               period=self.period))
+
+    def add_stage(self, stage):
+        &#34;&#34;&#34;
+        Append a single stage
+        stage takes and returns a list of DataFrames
+        &#34;&#34;&#34;
+        self.stages.append(stage)
+
+    def prepare(self):
+        &#34;&#34;&#34;
+        Preprocess and return all the dataframes
+        &#34;&#34;&#34;
+        for stage in self.stages:
+            self.dataframes = stage(self.dataframes)
+        return self.dataframes
+
+def CutStage(attribute_names: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe take out &#39;attribute_names&#39; columns only
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    def _cut_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i] = dataframe[attribute_names]
+        return dataframe_list
+    return _cut_stage
+
+def WindowStage(window_size=15):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe made data windowed
+    &#34;&#34;&#34;
+    def _window_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            
+            windowed_dataframe_len = len(dataframe) - window_size + 1
+            windowed_data = [None for k in range(windowed_dataframe_len)]
+            columns = None
+            for j in range(windowed_dataframe_len):
+                windowed_line = []
+                columns = []
+                for column in dataframe.columns:
+                    windowed_line += dataframe[column][j:j+window_size].to_list()
+                    columns += [f&#34;{column}_{k}&#34; for k in range(window_size)]                
+                windowed_data[j] = windowed_line
+            dataframe_list[i] = pd.DataFrame(windowed_data, columns=columns)
+        return dataframe_list
+    return _window_stage
+
+def TrainTestStage(test=0.2):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe append train &amp; test datasets instead
+    &#34;&#34;&#34;
+    def _traintest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test) * len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:])
+        return new_dataframe_list
+    return _traintest_stage
+
+def TrainValidTestStage(valid=0.2, test=0.2):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe append train &amp; valid &amp; test datasets instead
+    &#34;&#34;&#34;
+    def _trainvalidtest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test - valid) * len(dataframe))
+            valid_count = round(valid * len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:train_count+valid_count])
+            new_dataframe_list.append(dataframe[train_count+valid_count:])
+        return new_dataframe_list
+    return _trainvalidtest_stage
+
+def TargetsSeparateStage(target_names=[&#34;Target&#34;]):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe take out &#39;target_names&#39; and append it as another dataset
+    &#34;&#34;&#34;
+    def _targetsseparate_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in target_names]
+            new_dataframe_list.append(dataframe[columns_to_keep])
+            new_dataframe_list.append(dataframe[target_names])
+        return new_dataframe_list
+    return _targetsseparate_stage
+
+def TargetStage(target, target_name=&#34;Target&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe find &#39;target&#39; column and mark it as &#39;target_name&#39;
+    &#34;&#34;&#34;
+    def _target_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns = dataframe.columns.to_list()
+            if target not in columns:
+                raise util.SPPException(f&#34;{target} not in {columns}&#34;)
+            columns.remove(target)
+            dataframe_list[i] =  dataframe_list[i][columns + [target]].rename(columns={target: target_name})
+        return dataframe_list
+    return _target_stage
+
+def ConcatStage(step: int):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe concat dataframes with &#39;step&#39;
+    &#34;&#34;&#34;
+    def _concat_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for start_id in range(min(step, len(dataframe_list))):
+            new_dataframe = None
+            for current_id in range(start_id, len(dataframe_list), step):
+                if new_dataframe is None:
+                    new_dataframe = dataframe_list[current_id]
+                else:
+                    new_dataframe = pd.concat([new_dataframe, dataframe_list[current_id]])
+            new_dataframe_list.append(new_dataframe.reset_index(drop=True))
+        return new_dataframe_list
+    return _concat_stage
+
+def LnProfStage(attribute_name=&#34;Close&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe compute ln profit from &#39;attribute_name&#39; column
+    [First value is considered 1]
+    &#34;&#34;&#34;
+    def _lnprof_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            lnprofs = [1]
+            for j in range(1, len(dataframe)):
+                price_curr = dataframe[attribute_name].to_list()[j]
+                price_prev = dataframe[attribute_name].to_list()[j-1]
+                lnprofs.append(math.log(price_curr / price_prev))
+            dataframe_list[i][attribute_name+&#34;_LnProf&#34;] = lnprofs
+            # dataframe_list[i] = dataframe_list[i][1:]
+        return dataframe_list
+    return _lnprof_stage
+
+def DivStage(divisible_attr_name, divisor_attr_name, attr_name):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe create &#39;attr_name&#39; = &#39;divisible_attr_name&#39; / &#39;divisor_attr_name&#39;
+    [First value is considered 0]
+    &#34;&#34;&#34;
+    def _div_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i][attr_name] = dataframe_list[i][divisible_attr_name] / dataframe_list[i][divisor_attr_name]
+        return dataframe_list
+    return _div_stage
+
+def BinarizeStage(threshold=0., attribute_name=&#34;Close_LnProf&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe value from &#39;attribute_name&#39; column apply: 
+    1 if value &gt; threshold else 0
+    &#34;&#34;&#34;
+    def _binarize_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            binarized = []
+            for j in range(0, len(dataframe)):
+                curr = dataframe[attribute_name].to_list()[j]
+                binarized.append(1 if curr &gt;= threshold else 0)
+            dataframe_list[i][attribute_name+&#34;_Bin&#34;] = binarized
+        return dataframe_list
+    return _binarize_stage
+
+def ExpProfStage(prev_price_attribute_name=&#34;Close&#34;, attribute_name=&#34;Close_LnProf&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe computes real stock cost based on &#39;prev_price_attribute_name&#39; 
+    from logarifmic profit in &#39;attribute_name&#39;
+    [&#39;prev_price_attribute_name&#39; should contain data shifted by one 1 day back]
+    &#34;&#34;&#34;
+    def _expprof_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            expprofs = []
+            for j in range(len(dataframe)):
+                ln_price_curr = dataframe[attribute_name].to_list()[j]
+                price_prev = dataframe[prev_price_attribute_name].to_list()[j]
+                expprofs.append(math.exp(ln_price_curr) * price_prev)
+            dataframe_list[i][attribute_name+&#34;_ExpProf&#34;] = expprofs
+        return dataframe_list
+    return _expprof_stage
+
+def DropStage(attribute_names: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe drop all the &#39;attribute_names&#39;
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;DropStage input {type(attribute_names)} not a {list}&#34;)
+    def _drop_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
+            dataframe_list[i] = dataframe[columns_to_keep]
+        return dataframe_list
+    return _drop_stage
+
+def PopStage(attribute_names: list, keeper: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe drop all the &#39;attribute_names&#39; and put them to &#39;keeper&#39;
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    def _pop_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
+            keeper.append(dataframe[attribute_names])
+            dataframe_list[i] = dataframe[columns_to_keep]
+        return dataframe_list
+    return _pop_stage
+
+def RSIColStage(attribute_name=&#34;Close&#34;, period=14):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe compute RSI from &#39;attribute_name&#39;
+    &#34;&#34;&#34;
+    def _rsicol_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i][&#34;RSI&#34;] = _rsi(dataframe, attribute_name, period)
+            # dataframe_list[i] = dataframe_list[i][1:]
+        return dataframe_list
+    return _rsicol_stage
+
+def TrendSubColStage(attribute_name = &#34;Close&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe subs trend from &#39;attribute_name&#39;
+    &#34;&#34;&#34;
+    def _trendsubcol_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            x = pd.DataFrame(np.arange(len(dataframe)), columns=[&#34;Idx&#34;])
+            y = dataframe[attribute_name]
+            regression = LinearRegression().fit(x, y)
+            trend = regression.predict(x)
+
+            dataframe_list[i][attribute_name] = dataframe[attribute_name].to_numpy() - trend
+        return dataframe_list
+    return _trendsubcol_stage
+
+class DefaultPipeline:
+    &#34;&#34;&#34;
+    Parent for all the data process pipelines. One should override &#39;_stages(self)-&gt;list&#39; method to
+    add a new pipeline in the system. 
+    &#34;&#34;&#34;
+    def __init__(self, ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2):
+        &#34;&#34;&#34;
+        ticker      - stock ticker;
+        start, end  - iso strings of date, use this OR period API;
+        period      - 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+        window_size - window size;
+        test_coef   - amount of data represent test
+        &#34;&#34;&#34;
+
+        self.concat_need = False
+        if isinstance(ticker, str):
+            self.tickers = [ticker]
+        elif isinstance(ticker, Iterable):
+            self.tickers = ticker
+            self.concat_need = True
+        else:
+            raise util.SPPException(f&#34;unknown ticker type {type(ticker)}&#34;)
+
+        self.start = start
+        self.end = end
+        self.period = period
+        self.window_size = window_size
+        self.test_coef = test_coef
+        self.prev_price_keeper = []
+        self.true_price_keeper = []
+
+    def __str__(self):
+        string = &#34;&#34;
+        pref = &#34;&#34;
+        for stage in self._stages():
+            string += pref + stage.__name__
+            pref = &#34;, &#34;
+        return f&#34;({string})&#34;
+
+    def __repr__(self):
+        return f&#34;{type(self).__name__}{self.__str__()}&#34;
+
+    def _stages(self):
+        stages=[]
+        return stages
+    
+    def get_data(self):
+        &#34;&#34;&#34;
+        Returns (X_train, y_train, X_test, y_test)
+        &#34;&#34;&#34;
+        self.prev_price_keeper = []
+        self.true_price_keeper = []
+
+        stages=self._stages()
+
+        # # if multiple tickers were proposed
+        # if self.concat_need:
+        #     stages.append(ConcatStage(4))
+
+        preprocessor = DataPrepare()
+        preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
+                        stages=stages)
+        preprocessor.download()
+        to_ret = preprocessor.prepare()
+        # # fix buffers if multiple tickers were proposed
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.prev_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.prev_price_keeper = [train_keeper, test_keeper]
+
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.true_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.true_price_keeper = [train_keeper, test_keeper]
+
+        return to_ret
+
+    def _get_price(self, y_ln_pred, train_test_id):
+        pred_df = pd.DataFrame(np.array(y_ln_pred), columns=[&#34;Prediction&#34;])
+        pred_df[&#34;Close_Prev&#34;] = self.prev_price_keeper[train_test_id].to_numpy()
+        
+        preprocessor = DataPrepare()
+        preprocessor.init_datalist([pred_df],
+                        stages=[
+                            ExpProfStage(&#34;Close_Prev&#34;, &#34;Prediction&#34;),
+                        ])
+        df = preprocessor.prepare()[0][[&#34;Prediction_ExpProf&#34;]]
+        df.rename(columns={&#34;Prediction_ExpProf&#34;: &#34;Prediction&#34;})
+        df[&#34;Price_True&#34;] = self.true_price_keeper[train_test_id].to_numpy()
+        return df
+
+    def get_train_price(self, y_train_ln_pred):
+        &#34;&#34;&#34;
+        Repair ln profit to stock price for train data
+        &#34;&#34;&#34;
+        return self._get_price(y_train_ln_pred, 0)
+
+    def get_test_price(self, y_test_ln_pred):
+        &#34;&#34;&#34;
+        Repair ln profit to stock price for test data
+
+        Return: pd.DataFrame
+                Prediction: Predicted price
+                Price_True: Real price
+        &#34;&#34;&#34;
+        return self._get_price(y_test_ln_pred, 1)
+
+class BaselineBinPipeline(DefaultPipeline): 
+    &#34;&#34;&#34;
+    Basic pipeline that contains close data only
+    &#34;&#34;&#34;
+    def _stages(self):
+        stages=[
+            # Use close price in ln form
+            CutStage([&#34;Close&#34;]),
+            # RSIColStage(&#34;Close&#34;),
+            LnProfStage(&#34;Close&#34;),
+            WindowStage(self.window_size),
+            TargetStage(f&#34;Close_LnProf_{self.window_size-1}&#34;),
+
+            # Reduce regression task to classification
+            BinarizeStage(0., &#34;Target&#34;),
+            DropStage([&#34;Target&#34;]),
+            TargetStage(&#34;Target_Bin&#34;),
+
+            # Split to train/test and X/y
+            # DropStage([f&#34;RSI_{self.window_size-1}&#34;]),
+            DropStage([f&#34;Close_{i}&#34; for i in range(self.window_size-2)]),
+            TrainTestStage(test=self.test_coef),
+            PopStage([f&#34;Close_{self.window_size-2}&#34;], self.prev_price_keeper),
+            PopStage([f&#34;Close_{self.window_size-1}&#34;], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ]
+        return stages
+
+class RsiBinPipeline(DefaultPipeline):   
+    &#34;&#34;&#34;
+    Basic pipeline extended with RSI
+    &#34;&#34;&#34;     
+    def _stages(self):
+        stages=[
+            CutStage([&#34;Close&#34;]),
+            RSIColStage(&#34;Close&#34;),
+            LnProfStage(&#34;Close&#34;),
+            WindowStage(self.window_size),
+            TargetStage(f&#34;Close_LnProf_{self.window_size-1}&#34;),
+
+            BinarizeStage(0., &#34;Target&#34;),
+            DropStage([&#34;Target&#34;]),
+            TargetStage(&#34;Target_Bin&#34;),
+
+            DropStage([f&#34;RSI_{self.window_size-1}&#34;]),
+            DropStage([f&#34;Close_{i}&#34; for i in range(self.window_size-2)]),
+            TrainTestStage(test=self.test_coef),
+            PopStage([f&#34;Close_{self.window_size-2}&#34;], self.prev_price_keeper),
+            PopStage([f&#34;Close_{self.window_size-1}&#34;], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ]
+        return stages</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="spp.process.CutStage"><code class="name flex">
+<span>def <span class="ident">CutStage</span></span>(<span>attribute_names: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe take out 'attribute_names' columns only</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def CutStage(attribute_names: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe take out &#39;attribute_names&#39; columns only
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    def _cut_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i] = dataframe[attribute_names]
+        return dataframe_list
+    return _cut_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.WindowStage"><code class="name flex">
+<span>def <span class="ident">WindowStage</span></span>(<span>window_size=15)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe made data windowed</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def WindowStage(window_size=15):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe made data windowed
+    &#34;&#34;&#34;
+    def _window_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            
+            windowed_dataframe_len = len(dataframe) - window_size + 1
+            windowed_data = [None for k in range(windowed_dataframe_len)]
+            columns = None
+            for j in range(windowed_dataframe_len):
+                windowed_line = []
+                columns = []
+                for column in dataframe.columns:
+                    windowed_line += dataframe[column][j:j+window_size].to_list()
+                    columns += [f&#34;{column}_{k}&#34; for k in range(window_size)]                
+                windowed_data[j] = windowed_line
+            dataframe_list[i] = pd.DataFrame(windowed_data, columns=columns)
+        return dataframe_list
+    return _window_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.TrainTestStage"><code class="name flex">
+<span>def <span class="ident">TrainTestStage</span></span>(<span>test=0.2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe append train &amp; test datasets instead</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def TrainTestStage(test=0.2):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe append train &amp; test datasets instead
+    &#34;&#34;&#34;
+    def _traintest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test) * len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:])
+        return new_dataframe_list
+    return _traintest_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.TrainValidTestStage"><code class="name flex">
+<span>def <span class="ident">TrainValidTestStage</span></span>(<span>valid=0.2, test=0.2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe append train &amp; valid &amp; test datasets instead</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def TrainValidTestStage(valid=0.2, test=0.2):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe append train &amp; valid &amp; test datasets instead
+    &#34;&#34;&#34;
+    def _trainvalidtest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test - valid) * len(dataframe))
+            valid_count = round(valid * len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:train_count+valid_count])
+            new_dataframe_list.append(dataframe[train_count+valid_count:])
+        return new_dataframe_list
+    return _trainvalidtest_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.TargetsSeparateStage"><code class="name flex">
+<span>def <span class="ident">TargetsSeparateStage</span></span>(<span>target_names=['Target'])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe take out 'target_names' and append it as another dataset</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def TargetsSeparateStage(target_names=[&#34;Target&#34;]):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe take out &#39;target_names&#39; and append it as another dataset
+    &#34;&#34;&#34;
+    def _targetsseparate_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in target_names]
+            new_dataframe_list.append(dataframe[columns_to_keep])
+            new_dataframe_list.append(dataframe[target_names])
+        return new_dataframe_list
+    return _targetsseparate_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.TargetStage"><code class="name flex">
+<span>def <span class="ident">TargetStage</span></span>(<span>target, target_name='Target')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe find 'target' column and mark it as 'target_name'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def TargetStage(target, target_name=&#34;Target&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe find &#39;target&#39; column and mark it as &#39;target_name&#39;
+    &#34;&#34;&#34;
+    def _target_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns = dataframe.columns.to_list()
+            if target not in columns:
+                raise util.SPPException(f&#34;{target} not in {columns}&#34;)
+            columns.remove(target)
+            dataframe_list[i] =  dataframe_list[i][columns + [target]].rename(columns={target: target_name})
+        return dataframe_list
+    return _target_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.ConcatStage"><code class="name flex">
+<span>def <span class="ident">ConcatStage</span></span>(<span>step: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe concat dataframes with 'step'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ConcatStage(step: int):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe concat dataframes with &#39;step&#39;
+    &#34;&#34;&#34;
+    def _concat_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for start_id in range(min(step, len(dataframe_list))):
+            new_dataframe = None
+            for current_id in range(start_id, len(dataframe_list), step):
+                if new_dataframe is None:
+                    new_dataframe = dataframe_list[current_id]
+                else:
+                    new_dataframe = pd.concat([new_dataframe, dataframe_list[current_id]])
+            new_dataframe_list.append(new_dataframe.reset_index(drop=True))
+        return new_dataframe_list
+    return _concat_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.LnProfStage"><code class="name flex">
+<span>def <span class="ident">LnProfStage</span></span>(<span>attribute_name='Close')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe compute ln profit from 'attribute_name' column
+[First value is considered 1]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def LnProfStage(attribute_name=&#34;Close&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe compute ln profit from &#39;attribute_name&#39; column
+    [First value is considered 1]
+    &#34;&#34;&#34;
+    def _lnprof_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            lnprofs = [1]
+            for j in range(1, len(dataframe)):
+                price_curr = dataframe[attribute_name].to_list()[j]
+                price_prev = dataframe[attribute_name].to_list()[j-1]
+                lnprofs.append(math.log(price_curr / price_prev))
+            dataframe_list[i][attribute_name+&#34;_LnProf&#34;] = lnprofs
+            # dataframe_list[i] = dataframe_list[i][1:]
+        return dataframe_list
+    return _lnprof_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DivStage"><code class="name flex">
+<span>def <span class="ident">DivStage</span></span>(<span>divisible_attr_name, divisor_attr_name, attr_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe create 'attr_name' = 'divisible_attr_name' / 'divisor_attr_name'
+[First value is considered 0]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def DivStage(divisible_attr_name, divisor_attr_name, attr_name):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe create &#39;attr_name&#39; = &#39;divisible_attr_name&#39; / &#39;divisor_attr_name&#39;
+    [First value is considered 0]
+    &#34;&#34;&#34;
+    def _div_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i][attr_name] = dataframe_list[i][divisible_attr_name] / dataframe_list[i][divisor_attr_name]
+        return dataframe_list
+    return _div_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.BinarizeStage"><code class="name flex">
+<span>def <span class="ident">BinarizeStage</span></span>(<span>threshold=0.0, attribute_name='Close_LnProf')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe value from 'attribute_name' column apply:
+1 if value &gt; threshold else 0</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def BinarizeStage(threshold=0., attribute_name=&#34;Close_LnProf&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe value from &#39;attribute_name&#39; column apply: 
+    1 if value &gt; threshold else 0
+    &#34;&#34;&#34;
+    def _binarize_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            binarized = []
+            for j in range(0, len(dataframe)):
+                curr = dataframe[attribute_name].to_list()[j]
+                binarized.append(1 if curr &gt;= threshold else 0)
+            dataframe_list[i][attribute_name+&#34;_Bin&#34;] = binarized
+        return dataframe_list
+    return _binarize_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.ExpProfStage"><code class="name flex">
+<span>def <span class="ident">ExpProfStage</span></span>(<span>prev_price_attribute_name='Close', attribute_name='Close_LnProf')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe computes real stock cost based on 'prev_price_attribute_name'
+from logarifmic profit in 'attribute_name'
+['prev_price_attribute_name' should contain data shifted by one 1 day back]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ExpProfStage(prev_price_attribute_name=&#34;Close&#34;, attribute_name=&#34;Close_LnProf&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe computes real stock cost based on &#39;prev_price_attribute_name&#39; 
+    from logarifmic profit in &#39;attribute_name&#39;
+    [&#39;prev_price_attribute_name&#39; should contain data shifted by one 1 day back]
+    &#34;&#34;&#34;
+    def _expprof_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            expprofs = []
+            for j in range(len(dataframe)):
+                ln_price_curr = dataframe[attribute_name].to_list()[j]
+                price_prev = dataframe[prev_price_attribute_name].to_list()[j]
+                expprofs.append(math.exp(ln_price_curr) * price_prev)
+            dataframe_list[i][attribute_name+&#34;_ExpProf&#34;] = expprofs
+        return dataframe_list
+    return _expprof_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DropStage"><code class="name flex">
+<span>def <span class="ident">DropStage</span></span>(<span>attribute_names: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe drop all the 'attribute_names'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def DropStage(attribute_names: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe drop all the &#39;attribute_names&#39;
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;DropStage input {type(attribute_names)} not a {list}&#34;)
+    def _drop_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
+            dataframe_list[i] = dataframe[columns_to_keep]
+        return dataframe_list
+    return _drop_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.PopStage"><code class="name flex">
+<span>def <span class="ident">PopStage</span></span>(<span>attribute_names: list, keeper: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe drop all the 'attribute_names' and put them to 'keeper'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def PopStage(attribute_names: list, keeper: list):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe drop all the &#39;attribute_names&#39; and put them to &#39;keeper&#39;
+    &#34;&#34;&#34;
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    if type(attribute_names) != list:
+        raise util.SPPException(f&#34;CutStage input {type(attribute_names)} not a {list}&#34;)
+    def _pop_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in attribute_names]
+            keeper.append(dataframe[attribute_names])
+            dataframe_list[i] = dataframe[columns_to_keep]
+        return dataframe_list
+    return _pop_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.RSIColStage"><code class="name flex">
+<span>def <span class="ident">RSIColStage</span></span>(<span>attribute_name='Close', period=14)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe compute RSI from 'attribute_name'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def RSIColStage(attribute_name=&#34;Close&#34;, period=14):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe compute RSI from &#39;attribute_name&#39;
+    &#34;&#34;&#34;
+    def _rsicol_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            dataframe_list[i][&#34;RSI&#34;] = _rsi(dataframe, attribute_name, period)
+            # dataframe_list[i] = dataframe_list[i][1:]
+        return dataframe_list
+    return _rsicol_stage</code></pre>
+</details>
+</dd>
+<dt id="spp.process.TrendSubColStage"><code class="name flex">
+<span>def <span class="ident">TrendSubColStage</span></span>(<span>attribute_name='Close')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stage.
+foreach dataframe subs trend from 'attribute_name'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def TrendSubColStage(attribute_name = &#34;Close&#34;):
+    &#34;&#34;&#34;
+    Stage.
+    foreach dataframe subs trend from &#39;attribute_name&#39;
+    &#34;&#34;&#34;
+    def _trendsubcol_stage(dataframe_list: list):
+        for i, dataframe in enumerate(dataframe_list):
+            x = pd.DataFrame(np.arange(len(dataframe)), columns=[&#34;Idx&#34;])
+            y = dataframe[attribute_name]
+            regression = LinearRegression().fit(x, y)
+            trend = regression.predict(x)
+
+            dataframe_list[i][attribute_name] = dataframe[attribute_name].to_numpy() - trend
+        return dataframe_list
+    return _trendsubcol_stage</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="spp.process.DataPrepare"><code class="flex name class">
+<span>class <span class="ident">DataPrepare</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Implements full pipeline of data downloading and preprocessing. Call order is
+init_yahoo, download, prepare</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataPrepare:
+    &#34;&#34;&#34;
+    Implements full pipeline of data downloading and preprocessing. Call order is
+    init_yahoo, download, prepare
+    &#34;&#34;&#34;
+    def __init__(self):
+        pass
+        
+    def init_yahoo(self, tickers, start=None, end=None, 
+                 period=None,
+                 interval=&#39;1d&#39;, stages = []):
+        &#34;&#34;&#34;
+        Initialize yahoo download properties
+        &#34;&#34;&#34;
+        self.tickers = tickers
+        self.start = start
+        self.end = end
+        self.period = period
+        self.interval = interval
+
+        self.dataframes = []
+        self.stages = stages
+
+    def init_datalist(self, data_list, stages = []):
+        &#34;&#34;&#34;
+        Used for predownloaded data. data_list contains all the 
+        dowloaded dataframes and stages contains all the prepare
+        stages.
+        &#34;&#34;&#34;
+        self.dataframes = data_list
+        self.stages = stages
+
+    def download(self):
+        &#34;&#34;&#34;
+        Download data
+        &#34;&#34;&#34;
+        for ticker in self.tickers:
+            self.dataframes.append(yf.download(ticker, start=self.start, end=self.end, interval=self.interval, 
+                                               period=self.period))
+
+    def add_stage(self, stage):
+        &#34;&#34;&#34;
+        Append a single stage
+        stage takes and returns a list of DataFrames
+        &#34;&#34;&#34;
+        self.stages.append(stage)
+
+    def prepare(self):
+        &#34;&#34;&#34;
+        Preprocess and return all the dataframes
+        &#34;&#34;&#34;
+        for stage in self.stages:
+            self.dataframes = stage(self.dataframes)
+        return self.dataframes</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="spp.process.DataPrepare.init_yahoo"><code class="name flex">
+<span>def <span class="ident">init_yahoo</span></span>(<span>self, tickers, start=None, end=None, period=None, interval='1d', stages=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize yahoo download properties</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_yahoo(self, tickers, start=None, end=None, 
+             period=None,
+             interval=&#39;1d&#39;, stages = []):
+    &#34;&#34;&#34;
+    Initialize yahoo download properties
+    &#34;&#34;&#34;
+    self.tickers = tickers
+    self.start = start
+    self.end = end
+    self.period = period
+    self.interval = interval
+
+    self.dataframes = []
+    self.stages = stages</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DataPrepare.init_datalist"><code class="name flex">
+<span>def <span class="ident">init_datalist</span></span>(<span>self, data_list, stages=[])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used for predownloaded data. data_list contains all the
+dowloaded dataframes and stages contains all the prepare
+stages.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_datalist(self, data_list, stages = []):
+    &#34;&#34;&#34;
+    Used for predownloaded data. data_list contains all the 
+    dowloaded dataframes and stages contains all the prepare
+    stages.
+    &#34;&#34;&#34;
+    self.dataframes = data_list
+    self.stages = stages</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DataPrepare.download"><code class="name flex">
+<span>def <span class="ident">download</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Download data</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def download(self):
+    &#34;&#34;&#34;
+    Download data
+    &#34;&#34;&#34;
+    for ticker in self.tickers:
+        self.dataframes.append(yf.download(ticker, start=self.start, end=self.end, interval=self.interval, 
+                                           period=self.period))</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DataPrepare.add_stage"><code class="name flex">
+<span>def <span class="ident">add_stage</span></span>(<span>self, stage)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Append a single stage
+stage takes and returns a list of DataFrames</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_stage(self, stage):
+    &#34;&#34;&#34;
+    Append a single stage
+    stage takes and returns a list of DataFrames
+    &#34;&#34;&#34;
+    self.stages.append(stage)</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DataPrepare.prepare"><code class="name flex">
+<span>def <span class="ident">prepare</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Preprocess and return all the dataframes</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare(self):
+    &#34;&#34;&#34;
+    Preprocess and return all the dataframes
+    &#34;&#34;&#34;
+    for stage in self.stages:
+        self.dataframes = stage(self.dataframes)
+    return self.dataframes</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="spp.process.DefaultPipeline"><code class="flex name class">
+<span>class <span class="ident">DefaultPipeline</span></span>
+<span>(</span><span>ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parent for all the data process pipelines. One should override '_stages(self)-&gt;list' method to
+add a new pipeline in the system. </p>
+<p>ticker
+- stock ticker;
+start, end
+- iso strings of date, use this OR period API;
+period
+- 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+window_size - window size;
+test_coef
+- amount of data represent test</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DefaultPipeline:
+    &#34;&#34;&#34;
+    Parent for all the data process pipelines. One should override &#39;_stages(self)-&gt;list&#39; method to
+    add a new pipeline in the system. 
+    &#34;&#34;&#34;
+    def __init__(self, ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2):
+        &#34;&#34;&#34;
+        ticker      - stock ticker;
+        start, end  - iso strings of date, use this OR period API;
+        period      - 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+        window_size - window size;
+        test_coef   - amount of data represent test
+        &#34;&#34;&#34;
+
+        self.concat_need = False
+        if isinstance(ticker, str):
+            self.tickers = [ticker]
+        elif isinstance(ticker, Iterable):
+            self.tickers = ticker
+            self.concat_need = True
+        else:
+            raise util.SPPException(f&#34;unknown ticker type {type(ticker)}&#34;)
+
+        self.start = start
+        self.end = end
+        self.period = period
+        self.window_size = window_size
+        self.test_coef = test_coef
+        self.prev_price_keeper = []
+        self.true_price_keeper = []
+
+    def __str__(self):
+        string = &#34;&#34;
+        pref = &#34;&#34;
+        for stage in self._stages():
+            string += pref + stage.__name__
+            pref = &#34;, &#34;
+        return f&#34;({string})&#34;
+
+    def __repr__(self):
+        return f&#34;{type(self).__name__}{self.__str__()}&#34;
+
+    def _stages(self):
+        stages=[]
+        return stages
+    
+    def get_data(self):
+        &#34;&#34;&#34;
+        Returns (X_train, y_train, X_test, y_test)
+        &#34;&#34;&#34;
+        self.prev_price_keeper = []
+        self.true_price_keeper = []
+
+        stages=self._stages()
+
+        # # if multiple tickers were proposed
+        # if self.concat_need:
+        #     stages.append(ConcatStage(4))
+
+        preprocessor = DataPrepare()
+        preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
+                        stages=stages)
+        preprocessor.download()
+        to_ret = preprocessor.prepare()
+        # # fix buffers if multiple tickers were proposed
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.prev_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.prev_price_keeper = [train_keeper, test_keeper]
+
+        # train_keeper = None
+        # test_keeper = None
+        # for i, keeper in enumerate(self.true_price_keeper):
+        #     if i % 2 == 0:
+        #         train_keeper = pd.concat([train_keeper, keeper])
+        #     else:
+        #         test_keeper = pd.concat([test_keeper, keeper])
+        # self.true_price_keeper = [train_keeper, test_keeper]
+
+        return to_ret
+
+    def _get_price(self, y_ln_pred, train_test_id):
+        pred_df = pd.DataFrame(np.array(y_ln_pred), columns=[&#34;Prediction&#34;])
+        pred_df[&#34;Close_Prev&#34;] = self.prev_price_keeper[train_test_id].to_numpy()
+        
+        preprocessor = DataPrepare()
+        preprocessor.init_datalist([pred_df],
+                        stages=[
+                            ExpProfStage(&#34;Close_Prev&#34;, &#34;Prediction&#34;),
+                        ])
+        df = preprocessor.prepare()[0][[&#34;Prediction_ExpProf&#34;]]
+        df.rename(columns={&#34;Prediction_ExpProf&#34;: &#34;Prediction&#34;})
+        df[&#34;Price_True&#34;] = self.true_price_keeper[train_test_id].to_numpy()
+        return df
+
+    def get_train_price(self, y_train_ln_pred):
+        &#34;&#34;&#34;
+        Repair ln profit to stock price for train data
+        &#34;&#34;&#34;
+        return self._get_price(y_train_ln_pred, 0)
+
+    def get_test_price(self, y_test_ln_pred):
+        &#34;&#34;&#34;
+        Repair ln profit to stock price for test data
+
+        Return: pd.DataFrame
+                Prediction: Predicted price
+                Price_True: Real price
+        &#34;&#34;&#34;
+        return self._get_price(y_test_ln_pred, 1)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="spp.process.BaselineBinPipeline" href="#spp.process.BaselineBinPipeline">BaselineBinPipeline</a></li>
+<li><a title="spp.process.RsiBinPipeline" href="#spp.process.RsiBinPipeline">RsiBinPipeline</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="spp.process.DefaultPipeline.get_data"><code class="name flex">
+<span>def <span class="ident">get_data</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns (X_train, y_train, X_test, y_test)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data(self):
+    &#34;&#34;&#34;
+    Returns (X_train, y_train, X_test, y_test)
+    &#34;&#34;&#34;
+    self.prev_price_keeper = []
+    self.true_price_keeper = []
+
+    stages=self._stages()
+
+    # # if multiple tickers were proposed
+    # if self.concat_need:
+    #     stages.append(ConcatStage(4))
+
+    preprocessor = DataPrepare()
+    preprocessor.init_yahoo(self.tickers, start=self.start, end=self.end, period=self.period,
+                    stages=stages)
+    preprocessor.download()
+    to_ret = preprocessor.prepare()
+    # # fix buffers if multiple tickers were proposed
+    # train_keeper = None
+    # test_keeper = None
+    # for i, keeper in enumerate(self.prev_price_keeper):
+    #     if i % 2 == 0:
+    #         train_keeper = pd.concat([train_keeper, keeper])
+    #     else:
+    #         test_keeper = pd.concat([test_keeper, keeper])
+    # self.prev_price_keeper = [train_keeper, test_keeper]
+
+    # train_keeper = None
+    # test_keeper = None
+    # for i, keeper in enumerate(self.true_price_keeper):
+    #     if i % 2 == 0:
+    #         train_keeper = pd.concat([train_keeper, keeper])
+    #     else:
+    #         test_keeper = pd.concat([test_keeper, keeper])
+    # self.true_price_keeper = [train_keeper, test_keeper]
+
+    return to_ret</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DefaultPipeline.get_train_price"><code class="name flex">
+<span>def <span class="ident">get_train_price</span></span>(<span>self, y_train_ln_pred)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Repair ln profit to stock price for train data</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_train_price(self, y_train_ln_pred):
+    &#34;&#34;&#34;
+    Repair ln profit to stock price for train data
+    &#34;&#34;&#34;
+    return self._get_price(y_train_ln_pred, 0)</code></pre>
+</details>
+</dd>
+<dt id="spp.process.DefaultPipeline.get_test_price"><code class="name flex">
+<span>def <span class="ident">get_test_price</span></span>(<span>self, y_test_ln_pred)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Repair ln profit to stock price for test data</p>
+<p>Return: pd.DataFrame
+Prediction: Predicted price
+Price_True: Real price</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_test_price(self, y_test_ln_pred):
+    &#34;&#34;&#34;
+    Repair ln profit to stock price for test data
+
+    Return: pd.DataFrame
+            Prediction: Predicted price
+            Price_True: Real price
+    &#34;&#34;&#34;
+    return self._get_price(y_test_ln_pred, 1)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="spp.process.BaselineBinPipeline"><code class="flex name class">
+<span>class <span class="ident">BaselineBinPipeline</span></span>
+<span>(</span><span>ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Basic pipeline that contains close data only</p>
+<p>ticker
+- stock ticker;
+start, end
+- iso strings of date, use this OR period API;
+period
+- 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+window_size - window size;
+test_coef
+- amount of data represent test</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BaselineBinPipeline(DefaultPipeline): 
+    &#34;&#34;&#34;
+    Basic pipeline that contains close data only
+    &#34;&#34;&#34;
+    def _stages(self):
+        stages=[
+            # Use close price in ln form
+            CutStage([&#34;Close&#34;]),
+            # RSIColStage(&#34;Close&#34;),
+            LnProfStage(&#34;Close&#34;),
+            WindowStage(self.window_size),
+            TargetStage(f&#34;Close_LnProf_{self.window_size-1}&#34;),
+
+            # Reduce regression task to classification
+            BinarizeStage(0., &#34;Target&#34;),
+            DropStage([&#34;Target&#34;]),
+            TargetStage(&#34;Target_Bin&#34;),
+
+            # Split to train/test and X/y
+            # DropStage([f&#34;RSI_{self.window_size-1}&#34;]),
+            DropStage([f&#34;Close_{i}&#34; for i in range(self.window_size-2)]),
+            TrainTestStage(test=self.test_coef),
+            PopStage([f&#34;Close_{self.window_size-2}&#34;], self.prev_price_keeper),
+            PopStage([f&#34;Close_{self.window_size-1}&#34;], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ]
+        return stages</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="spp.process.DefaultPipeline" href="#spp.process.DefaultPipeline">DefaultPipeline</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="spp.process.DefaultPipeline" href="#spp.process.DefaultPipeline">DefaultPipeline</a></b></code>:
+<ul class="hlist">
+<li><code><a title="spp.process.DefaultPipeline.get_data" href="#spp.process.DefaultPipeline.get_data">get_data</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_test_price" href="#spp.process.DefaultPipeline.get_test_price">get_test_price</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_train_price" href="#spp.process.DefaultPipeline.get_train_price">get_train_price</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="spp.process.RsiBinPipeline"><code class="flex name class">
+<span>class <span class="ident">RsiBinPipeline</span></span>
+<span>(</span><span>ticker, start=None, end=None, period=None, window_size=15, test_coef=0.2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Basic pipeline extended with RSI</p>
+<p>ticker
+- stock ticker;
+start, end
+- iso strings of date, use this OR period API;
+period
+- 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max; use this OR start/end API;
+window_size - window size;
+test_coef
+- amount of data represent test</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RsiBinPipeline(DefaultPipeline):   
+    &#34;&#34;&#34;
+    Basic pipeline extended with RSI
+    &#34;&#34;&#34;     
+    def _stages(self):
+        stages=[
+            CutStage([&#34;Close&#34;]),
+            RSIColStage(&#34;Close&#34;),
+            LnProfStage(&#34;Close&#34;),
+            WindowStage(self.window_size),
+            TargetStage(f&#34;Close_LnProf_{self.window_size-1}&#34;),
+
+            BinarizeStage(0., &#34;Target&#34;),
+            DropStage([&#34;Target&#34;]),
+            TargetStage(&#34;Target_Bin&#34;),
+
+            DropStage([f&#34;RSI_{self.window_size-1}&#34;]),
+            DropStage([f&#34;Close_{i}&#34; for i in range(self.window_size-2)]),
+            TrainTestStage(test=self.test_coef),
+            PopStage([f&#34;Close_{self.window_size-2}&#34;], self.prev_price_keeper),
+            PopStage([f&#34;Close_{self.window_size-1}&#34;], self.true_price_keeper),
+            TargetsSeparateStage(),
+        ]
+        return stages</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="spp.process.DefaultPipeline" href="#spp.process.DefaultPipeline">DefaultPipeline</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="spp.process.DefaultPipeline" href="#spp.process.DefaultPipeline">DefaultPipeline</a></b></code>:
+<ul class="hlist">
+<li><code><a title="spp.process.DefaultPipeline.get_data" href="#spp.process.DefaultPipeline.get_data">get_data</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_test_price" href="#spp.process.DefaultPipeline.get_test_price">get_test_price</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_train_price" href="#spp.process.DefaultPipeline.get_train_price">get_train_price</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="spp" href="index.html">spp</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="spp.process.CutStage" href="#spp.process.CutStage">CutStage</a></code></li>
+<li><code><a title="spp.process.WindowStage" href="#spp.process.WindowStage">WindowStage</a></code></li>
+<li><code><a title="spp.process.TrainTestStage" href="#spp.process.TrainTestStage">TrainTestStage</a></code></li>
+<li><code><a title="spp.process.TrainValidTestStage" href="#spp.process.TrainValidTestStage">TrainValidTestStage</a></code></li>
+<li><code><a title="spp.process.TargetsSeparateStage" href="#spp.process.TargetsSeparateStage">TargetsSeparateStage</a></code></li>
+<li><code><a title="spp.process.TargetStage" href="#spp.process.TargetStage">TargetStage</a></code></li>
+<li><code><a title="spp.process.ConcatStage" href="#spp.process.ConcatStage">ConcatStage</a></code></li>
+<li><code><a title="spp.process.LnProfStage" href="#spp.process.LnProfStage">LnProfStage</a></code></li>
+<li><code><a title="spp.process.DivStage" href="#spp.process.DivStage">DivStage</a></code></li>
+<li><code><a title="spp.process.BinarizeStage" href="#spp.process.BinarizeStage">BinarizeStage</a></code></li>
+<li><code><a title="spp.process.ExpProfStage" href="#spp.process.ExpProfStage">ExpProfStage</a></code></li>
+<li><code><a title="spp.process.DropStage" href="#spp.process.DropStage">DropStage</a></code></li>
+<li><code><a title="spp.process.PopStage" href="#spp.process.PopStage">PopStage</a></code></li>
+<li><code><a title="spp.process.RSIColStage" href="#spp.process.RSIColStage">RSIColStage</a></code></li>
+<li><code><a title="spp.process.TrendSubColStage" href="#spp.process.TrendSubColStage">TrendSubColStage</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="spp.process.DataPrepare" href="#spp.process.DataPrepare">DataPrepare</a></code></h4>
+<ul class="">
+<li><code><a title="spp.process.DataPrepare.init_yahoo" href="#spp.process.DataPrepare.init_yahoo">init_yahoo</a></code></li>
+<li><code><a title="spp.process.DataPrepare.init_datalist" href="#spp.process.DataPrepare.init_datalist">init_datalist</a></code></li>
+<li><code><a title="spp.process.DataPrepare.download" href="#spp.process.DataPrepare.download">download</a></code></li>
+<li><code><a title="spp.process.DataPrepare.add_stage" href="#spp.process.DataPrepare.add_stage">add_stage</a></code></li>
+<li><code><a title="spp.process.DataPrepare.prepare" href="#spp.process.DataPrepare.prepare">prepare</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="spp.process.DefaultPipeline" href="#spp.process.DefaultPipeline">DefaultPipeline</a></code></h4>
+<ul class="">
+<li><code><a title="spp.process.DefaultPipeline.get_data" href="#spp.process.DefaultPipeline.get_data">get_data</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_train_price" href="#spp.process.DefaultPipeline.get_train_price">get_train_price</a></code></li>
+<li><code><a title="spp.process.DefaultPipeline.get_test_price" href="#spp.process.DefaultPipeline.get_test_price">get_test_price</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="spp.process.BaselineBinPipeline" href="#spp.process.BaselineBinPipeline">BaselineBinPipeline</a></code></h4>
+</li>
+<li>
+<h4><code><a title="spp.process.RsiBinPipeline" href="#spp.process.RsiBinPipeline">RsiBinPipeline</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
