@@ -23,6 +23,7 @@ def _rsi(df, attribute_name, period = 14):
     Returns a pd.Series with the relative strength index.
     """
     close_delta = df[attribute_name].copy().diff()
+    close_delta[0] = 0  # for the first one
 
     # Make two series: one for lower closes and one for higher closes
     up = close_delta.clip(lower=0)
@@ -33,6 +34,7 @@ def _rsi(df, attribute_name, period = 14):
     
     rsi = ma_up / ma_down
     rsi = 100 - (100/(1 + rsi))
+    rsi = rsi.fillna(100)
     return rsi
 
 class DataPrepare:
@@ -325,6 +327,37 @@ def TrendSubColStage(attribute_name = "Close"):
         return dataframe_list
     return _trendsubcol_stage
 
+def TempTrainValidTestStage(valid=0.2, test=0.2):
+    """
+    Stage
+    foreach append train & valid & test datasets instead
+    """
+    def _trainvalidtest_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            train_count = round((1. - test - valid) * len(dataframe))
+            valid_count = round(valid * len(dataframe))
+#             print(train_count, valid_count, len(dataframe))
+            new_dataframe_list.append(dataframe[:train_count])
+            new_dataframe_list.append(dataframe[train_count:train_count+valid_count])
+            new_dataframe_list.append(dataframe[train_count+valid_count:])
+        return new_dataframe_list
+    return _trainvalidtest_stage
+
+def TempTargetsSeparateStage(target_names=["Target"]):
+    """
+    Stage
+    foreach take out 'target_names' and append it as another dataset
+    """
+    def _targetsseparate_stage(dataframe_list: list):
+        new_dataframe_list = []
+        for i, dataframe in enumerate(dataframe_list):
+            columns_to_keep = [col for col in dataframe.columns if col not in target_names]
+            new_dataframe_list.append(dataframe[columns_to_keep])
+            new_dataframe_list.append(dataframe[target_names])
+        return new_dataframe_list
+    return _targetsseparate_stage
+
 class DefaultPipeline:
     """
     Parent for all the data process pipelines. One should override '_stages(self)->list' method to
@@ -424,6 +457,9 @@ class DefaultPipeline:
         df["Price_True"] = self.true_price_keeper[train_test_id].to_numpy()
         return df
 
+    def _get_price_true(self, id):
+        return self.true_price_keeper[id].to_numpy()
+
     def get_train_price(self, y_train_ln_pred):
         """
         Repair ln profit to stock price for train data
@@ -490,5 +526,89 @@ class RsiBinPipeline(DefaultPipeline):
             PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
             PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
             TargetsSeparateStage(),
+        ]
+        return stages
+
+class HistBinPipeline(DefaultPipeline):        
+    def _stages(self):
+        stages=[
+            # Open processing
+            DivStage("Open", "Close", "Open_Rel"),
+            DropStage(["Open"]),
+            # High processing
+            DivStage("High", "Close", "High_Rel"),
+            DropStage(["High"]),
+            # Low processing
+            DivStage("Low", "Close", "Low_Rel"),
+            DropStage(["Low"]),
+            # AdjClose processing
+            DropStage(["Adj Close"]),
+            # Volume processing
+            DropStage(["Volume"]),
+            
+            # RSI
+            RSIColStage("Close"),
+            
+            LnProfStage("Close"),
+            WindowStage(self.window_size),
+            TargetStage(f"Close_LnProf_{self.window_size-1}"),
+
+            BinarizeStage(0., "Target"),
+            DropStage(["Target"]),
+            TargetStage("Target_Bin"),
+            
+            DropStage([f"Open_Rel_{self.window_size-1}"]),
+            DropStage([f"High_Rel_{self.window_size-1}"]),
+            DropStage([f"Low_Rel_{self.window_size-1}"]),
+
+            DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
+            DropStage([f"RSI_{self.window_size-1}"]),
+            
+            TempTrainValidTestStage(valid=self.test_coef,test=self.test_coef),   
+            PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
+            PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
+            TempTargetsSeparateStage(),
+        ]
+        return stages
+
+class HistBinPipeline0Valid(DefaultPipeline):        
+    def _stages(self):
+        stages=[
+            # Open processing
+            DivStage("Open", "Close", "Open_Rel"),
+            DropStage(["Open"]),
+            # High processing
+            DivStage("High", "Close", "High_Rel"),
+            DropStage(["High"]),
+            # Low processing
+            DivStage("Low", "Close", "Low_Rel"),
+            DropStage(["Low"]),
+            # AdjClose processing
+            DropStage(["Adj Close"]),
+            # Volume processing
+            DropStage(["Volume"]),
+            
+            # RSI
+            RSIColStage("Close"),
+            
+            LnProfStage("Close"),
+            WindowStage(self.window_size),
+            TargetStage(f"Close_LnProf_{self.window_size-1}"),
+
+            BinarizeStage(0., "Target"),
+            DropStage(["Target"]),
+            TargetStage("Target_Bin"),
+            
+            DropStage([f"Open_Rel_{self.window_size-1}"]),
+            DropStage([f"High_Rel_{self.window_size-1}"]),
+            DropStage([f"Low_Rel_{self.window_size-1}"]),
+
+            DropStage([f"Close_{i}" for i in range(self.window_size-2)]),
+            DropStage([f"RSI_{self.window_size-1}"]),
+            
+            TempTrainValidTestStage(test=self.test_coef,valid=0),   
+            PopStage([f"Close_{self.window_size-2}"], self.prev_price_keeper),
+            PopStage([f"Close_{self.window_size-1}"], self.true_price_keeper),
+            TempTargetsSeparateStage(),
         ]
         return stages

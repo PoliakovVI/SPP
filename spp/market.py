@@ -295,11 +295,11 @@ class BinYearTest:
         year_df = None
 
         for month_enddate in self.dates:
-            bpt = BinPortfolioTest(self.tickers, self.pipeline_class, 
+            self.bpt = BinPortfolioTest(self.tickers, self.pipeline_class, 
                                         train_period=self.train_period, test_period="1mo", end_date=month_enddate[1], 
                                         window_size=self.window_size, start_capital=self.start_capital)
             # get month results
-            month_df = bpt.trade(model)
+            month_df = self.bpt.trade(model)
             month_df = month_df[month_df["Case"] == "AVG"].rename(columns={"Case": "Month"})
             month_df.at[0,'Month'] = month_enddate[0]
 
